@@ -12,6 +12,13 @@ from shared import (
     TRAIN, VALIDATION, TEST,
 )
 from experiments import get_experiment_config, get_training_content
+WANDB_AVAILABLE = False
+try:
+    WANDB_AVAILABLE = True
+    import wandb
+except ImportError:
+    logging.warning("Could not import wandb. Disabling wandb.")
+    pass
 
 
 def get_parser(parser: Optional[argparse.ArgumentParser] = None) -> argparse.ArgumentParser:
@@ -24,8 +31,13 @@ def get_parser(parser: Optional[argparse.ArgumentParser] = None) -> argparse.Arg
     return parser
 
 
-def training_loop(model, optimizer, dl_dict: dict, config: dict, device: str = "cuda"):
+def training_loop(
+    model, optimizer, dl_dict: dict, config: dict,
+    device: str = "cuda", wandb_flag: bool = False,
+    output_dir: Path = None
+):
     for n_epoch in tqdm(range(config[NB_EPOCHS])):
+        current_loss = {TRAIN: 0., VALIDATION: 0., TEST: 0.}
         for phase in [TRAIN, VALIDATION, TEST]:
             if phase == TRAIN:
                 model.train()
@@ -40,8 +52,18 @@ def training_loop(model, optimizer, dl_dict: dict, config: dict, device: str = "
                     if phase == TRAIN:
                         loss.backward()
                         optimizer.step()
-            if phase == VALIDATION:
-                print(f"{phase}: Epoch {n_epoch} - Loss: {loss.item():.3f}")
+                current_loss[phase] += loss.item()
+            current_loss[phase] /= (len(dl_dict[phase]))
+        for phase in [VALIDATION, TEST]:
+            print(f"{phase}: Epoch {n_epoch} - Loss: {current_loss[phase]:.3e}")
+        if output_dir is not None:
+            with open(output_dir/f"metrics_{n_epoch}.json", "w") as f:
+                json.dump(current_loss, f)
+        if wandb_flag:
+            wandb.log(current_loss)
+    if output_dir is not None:
+        torch.save(model.cpu().state_dict(), output_dir/"last_model.pt")
+    return model
 
 
 def train(config: dict, output_dir: Path, device: str = "cuda", wandb_flag: bool = False):
@@ -50,12 +72,19 @@ def train(config: dict, output_dir: Path, device: str = "cuda", wandb_flag: bool
     output_dir.mkdir(parents=True, exist_ok=True)
     with open(output_dir/"config.json", "w") as f:
         json.dump(config, f)
-    if wandb_flag:
-        import wandb
-        wandb.init(project="mva-pepites", config=config)
     model, optimizer, dl_dict = get_training_content(config)
     model.to(device)
-    training_loop(model, optimizer, dl_dict, config, device=device)
+    if wandb_flag:
+        import wandb
+        wandb.init(
+            project="mva-pepites",
+            name=config[NAME],
+            tags=["debug"],
+            config=config
+        )
+    model = training_loop(model, optimizer, dl_dict, config, device=device,
+                          wandb_flag=wandb_flag, output_dir=output_dir)
+
     if wandb_flag:
         wandb.finish()
 
@@ -63,14 +92,15 @@ def train(config: dict, output_dir: Path, device: str = "cuda", wandb_flag: bool
 def train_main(argv):
     parser = get_parser()
     args = parser.parse_args(argv)
+    if not WANDB_AVAILABLE:
+        args.no_wandb = True
     device = "cpu" if args.cpu else ("cuda" if torch.cuda.is_available() else "cpu")
-    print(args.exp)
     for exp in args.exp:
         config = get_experiment_config(exp)
         print(config)
         output_dir = Path(args.output_dir)/config[NAME]
         logging.info(f"Training experiment {config[ID]} on device {device}...")
-        train(config, device=device, output_dir=output_dir)
+        train(config, device=device, output_dir=output_dir, wandb_flag=not args.no_wandb)
 
 
 if __name__ == "__main__":

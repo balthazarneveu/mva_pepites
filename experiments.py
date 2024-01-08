@@ -38,7 +38,7 @@ def get_experiment_config(exp: int) -> dict:
             ),
             NAME: "ConvModel"
         }
-    elif exp == 1:
+    elif exp == 1 or exp == 2:
         config[MODEL] = {
             ARCHITECTURE: dict(
                 conv_feats=16,
@@ -46,6 +46,8 @@ def get_experiment_config(exp: int) -> dict:
             ),
             NAME: "ConvModel"
         }
+        if exp == 2:
+            config[NB_EPOCHS] = 100
     return config
 
 
