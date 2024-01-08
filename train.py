@@ -7,7 +7,7 @@ from pathlib import Path
 import json
 from tqdm import tqdm
 from shared import (
-    ROOT_DIR,
+    ROOT_DIR, OUTPUT_FOLDER_NAME,
     ID, NAME, NB_EPOCHS,
     TRAIN, VALIDATION, TEST,
 )
@@ -25,7 +25,7 @@ def get_parser(parser: Optional[argparse.ArgumentParser] = None) -> argparse.Arg
     if parser is None:
         parser = argparse.ArgumentParser(description="Train a model")
     parser.add_argument("-e", "--exp", nargs="+", type=int, required=True, help="Experiment id")
-    parser.add_argument("-o", "--output-dir", type=str, default=ROOT_DIR/"__output", help="Output directory")
+    parser.add_argument("-o", "--output-dir", type=str, default=ROOT_DIR/OUTPUT_FOLDER_NAME, help="Output directory")
     parser.add_argument("-nowb", "--no-wandb", action="store_true", help="Disable weights and biases")
     parser.add_argument("--cpu", action="store_true", help="Force CPU")
     return parser
