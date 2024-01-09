@@ -51,12 +51,12 @@ def get_experiment_config(exp: int) -> dict:
     return config
 
 
-def get_training_content(config: dict) -> Tuple[ConvModel, torch.optim.Optimizer, dict]:
+def get_training_content(config: dict, device="cuda") -> Tuple[ConvModel, torch.optim.Optimizer, dict]:
     model = ConvModel(1, **config[MODEL][ARCHITECTURE])
     assert config[MODEL][NAME] == ConvModel.__name__
     config[MODEL][N_PARAMS] = model.count_parameters()
     optimizer = torch.optim.Adam(model.parameters(), **config[OPTIMIZER][PARAMS])
-    dl_dict = get_dataloaders(config, factor=1)
+    dl_dict = get_dataloaders(config, factor=1, device=device)
     return model, optimizer, dl_dict
 
 

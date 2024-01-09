@@ -39,10 +39,10 @@ class WavesDataloader(Dataset):
         return self.n_samples
 
 
-def get_dataloaders(config: dict, factor=1):
-    dl_train = WavesDataloader(n_samples=800*factor, freeze=False)
-    dl_valid = WavesDataloader(n_samples=100, freeze=True)
-    dl_test = WavesDataloader(n_samples=100, freeze=True, freq_range=[0., 30.])  # Test generalization
+def get_dataloaders(config: dict, factor=1, device: str = "cuda"):
+    dl_train = WavesDataloader(n_samples=800*factor, freeze=False, device=device)
+    dl_valid = WavesDataloader(n_samples=100, freeze=True, device=device)
+    dl_test = WavesDataloader(n_samples=100, freeze=True, freq_range=[0., 30.], device=device)  # Test generalization
     dl_dict = {
         TRAIN: DataLoader(dl_train, shuffle=True, batch_size=config[DATALOADER][BATCH_SIZE][TRAIN]),
         VALIDATION: DataLoader(dl_valid, shuffle=False, batch_size=config[DATALOADER][BATCH_SIZE][VALIDATION]),

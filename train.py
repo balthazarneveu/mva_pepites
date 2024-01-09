@@ -72,7 +72,7 @@ def train(config: dict, output_dir: Path, device: str = "cuda", wandb_flag: bool
     output_dir.mkdir(parents=True, exist_ok=True)
     with open(output_dir/"config.json", "w") as f:
         json.dump(config, f)
-    model, optimizer, dl_dict = get_training_content(config)
+    model, optimizer, dl_dict = get_training_content(config, device=device)
     model.to(device)
     if wandb_flag:
         import wandb
