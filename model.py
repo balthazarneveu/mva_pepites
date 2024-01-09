@@ -4,13 +4,13 @@ import torch
 class BaseModel(torch.nn.Module):
     """Base class for all models with additional methods"""
     # @TODO: add factory for autoregristration of model classes.
-
+    # @TODO: add load/save methods
     def count_parameters(self):
         return sum(p.numel() for p in self.parameters() if p.requires_grad)
 
 
 class ConvModel(BaseModel):
-    """A simple 1D signal convolutional model 
+    """A simple 1D signal convolutional model
     with pooling and pointwise convolutions to allow estimating a scalar value
     """
 

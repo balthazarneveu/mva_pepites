@@ -102,7 +102,7 @@ def main(argv):
         "model_sources": []
     }
     prepare_notebook((kernel_path/nb_id).with_suffix(".ipynb"), args.exp, branch,
-                     git_user=git_user, git_repo=git_repo)
+                     git_user=GIT_USER, git_repo=GIT_REPO)
     assert (kernel_path/nb_id).with_suffix(".ipynb").exists()
     with open(kernel_path/"kernel-metadata.json", "w") as f:
         json.dump(config, f, indent=4)
