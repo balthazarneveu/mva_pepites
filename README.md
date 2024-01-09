@@ -4,6 +4,9 @@
 - Version everything under github.
 - Save training metrics (+option to log to weights and biases)
 
+![](/illustrations/overview.png)
+
+
 Here's what your runs could look like on [Weights and biases](https://wandb.ai/)...
 
 ![](/illustrations/wandb.png)
@@ -67,7 +70,7 @@ Run `python remote_training.py -u user1 -e X -nowb`
 This will create a dedicated folder for training a specific experiment with a dedicated notebook.
 
 - use **`-p`** (`--push`) will upload/push the notebook and run it.
-- use **`-d`** (`--download`) to download the training results and save it to disk. This is not automatirc
+- use **`-d`** (`--download`) to download the training results and save it to disk. This is not automatic
 
 
 #### :green_circle: First time setup
@@ -94,6 +97,8 @@ This will create a dedicated folder for training a specific experiment with a de
 
 :mag: Want to contribute, new features, spotted a bug under your OS? file an [issue here](https://github.com/balthazarneveu/mva_pepites/issues)
 
-:key: It is possible to work with privat github repositories but it will require your github token to be inserted into kaggle secrets.
+:key: It is possible to work with private github repositories but it will require your github token to be inserted into kaggle secrets.
+
+:star: Give a star to this repo if you're planning using it.
 
 -----
