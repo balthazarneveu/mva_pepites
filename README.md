@@ -4,23 +4,33 @@
 - Version everything under github.
 - Save training metrics (+option to log to weights and biases)
 
+Here's what your runs could look like on [Weights and biases](https://wandb.ai/)...
+
+![](/illustrations/wandb.png)
+
 :sos: How to use? 
+- `pip install kaggle`
 - Create a kaggle account, get a kaggle API token.
 - Copy paste this repo as a template and start customizing, check that you can train locally...
 - Fill the `__kaggle_login.py` :warning: do not push it to git
 - Push your code to github
 - Use command line to push your notebook to Kaggle.
 
-:sos: What to customize?
+:bulb: What to customize?
 
-See [configuration.py](/configuration.py)
+- Customize [configuration.py](/configuration.py)
 ```python
 NB_ID = "training-notebook" # This will be the name which appears on Kaggle.
 GIT_USER = "balthazarneveu" # Your git user name
 GIT_REPO = "mva_pepites" # Your current git repo
 KAGGLE_DATASET_LIST = [] # Keep free unless you need to acess kaggle datasets. You'll need to modify the remote_training_template.ipynb.
 ```
-- :bulb: you can add kaggle datasets (if you need to put 4Gb of data, it's possible to host it with [Kaggle datasets](https://www.kaggle.com/datasets)). Fill the `KAGGLE_DATASET_LIST`. You'll also have to customize the [remote_training_template.ipynb](/remote_training_template.ipynb) to unzip and acess datasets.
+> Note: *you can add kaggle datasets (if you need to put 4Gb of data, it's possible to host it with [Kaggle datasets](https://www.kaggle.com/datasets)). Fill the `KAGGLE_DATASET_LIST`. You'll also have to customize the [remote_training_template.ipynb](/remote_training_template.ipynb) to unzip and acess datasets.*
+
+
+> You can run several experiments in a row using `-e 1 2 3`. If initialization is long (decompress datasets, preprocess etc...), it may be worth running several experiments in a row.
+
+
 
 -------
 
@@ -72,7 +82,7 @@ This will create a dedicated folder for training a specific experiment with a de
 > - Quick save your notebook.
 > - Now run the remote training script again, this should execute. 
 
-:heart: Don't be scared, the provided experiments will go very fast.
+:heart: Don't be scared, the provided experiments will go very fast (less than 2 minutes to run on kaggle).
 
 ### Local training
 `python train.py -e 0 1`
@@ -82,5 +92,7 @@ This will create a dedicated folder for training a specific experiment with a de
 :warning: This is fully experimental, there are probably much better ways to wrap an existing training script.
 
 :mag: Want to contribute, new features, spotted a bug under your OS? file an [issue here](https://github.com/balthazarneveu/mva_pepites/issues)
+
+:key: It is possible to work with privat github repositories but it will require your github token to be inserted into kaggle secrets.
 
 -----
