@@ -13,7 +13,7 @@ import subprocess
 from shared import ROOT_DIR, OUTPUT_FOLDER_NAME
 from train import get_parser as get_train_parser
 from typing import Optional
-
+from configuration import KAGGLE_DATASET_LIST, NB_ID, GIT_USER, GIT_REPO
 
 def get_git_branch_name():
     try:
@@ -57,13 +57,9 @@ def prepare_notebook(
 
 
 def main(argv):
-    dataset_list = []  # e.g. ["balthazarneveu/gyraudio-dataset"]
-    nb_id = "training-notebook"
-    git_user = "balthazarneveu"
-    git_repo = "mva_pepites"
     parser = argparse.ArgumentParser(description="Train a model on Kaggle using a script\n" +
                                      "Help: https://github.com/balthazarneveu/mva_pepites")
-    parser.add_argument("-n", "--nb_id", type=str, help="Notebook name in kaggle", default=nb_id)
+    parser.add_argument("-n", "--nb_id", type=str, help="Notebook name in kaggle", default=NB_ID)
     parser.add_argument("-u", "--user", type=str, help="Kaggle user", choices=list(kaggle_users.keys()))
     parser.add_argument("--branch", type=str, help="Git branch name", default=get_git_branch_name())
     parser.add_argument("-p", "--push", action="store_true", help="Push")
@@ -100,7 +96,7 @@ def main(argv):
         "enable_gpu": "true" if not args.cpu else "false",
         "enable_tpu": "false",
         "enable_internet": "true",
-        "dataset_sources": dataset_list,
+        "dataset_sources": KAGGLE_DATASET_LIST,
         "competition_sources": [],
         "kernel_sources": [],
         "model_sources": []
