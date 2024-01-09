@@ -1,6 +1,7 @@
 wandb/**/*
 **/*__*/**
 **/__*/*
+__kaggle_login.py
 # Byte-compiled / optimized / DLL files
 
 __pycache__/
