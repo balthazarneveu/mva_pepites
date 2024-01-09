@@ -15,6 +15,7 @@ from train import get_parser as get_train_parser
 from typing import Optional
 from configuration import KAGGLE_DATASET_LIST, NB_ID, GIT_USER, GIT_REPO
 
+
 def get_git_branch_name():
     try:
         branch_name = subprocess.check_output(["git", "branch", "--show-current"]).strip().decode()
@@ -102,7 +103,7 @@ def main(argv):
         "model_sources": []
     }
     prepare_notebook((kernel_path/nb_id).with_suffix(".ipynb"), args.exp, branch,
-                     git_user=GIT_USER, git_repo=GIT_REPO)
+                     git_user=GIT_USER, git_repo=GIT_REPO, wandb_flag=not args.no_wandb)
     assert (kernel_path/nb_id).with_suffix(".ipynb").exists()
     with open(kernel_path/"kernel-metadata.json", "w") as f:
         json.dump(config, f, indent=4)
