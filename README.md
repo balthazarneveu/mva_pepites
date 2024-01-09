@@ -46,7 +46,8 @@ Each experiment is defined by:
 :test_tube: Code to define [new experiments](/experiments.py)
 
 ### Remote training
-
+- Retrive your kaggle token from the [website](https://www.kaggle.com/docs/api).
+- *Several accounts mean simply more GPU power*. As of 2024, Kaggle allows 30 hours per week, limited to 12hours of execution per notebook.
 - :unlock: Create a [__kaggle_login.py](__kaggle_login.py) file locally.
 ```python
 kaggle_users = {
@@ -60,7 +61,7 @@ kaggle_users = {
     },
 }
 ```
-
+:warning: Do not push these secret tokens to github and leak it publicly :facepalm:
 
 Run `python remote_training.py -u user1 -e X -nowb`
 This will create a dedicated folder for training a specific experiment with a dedicated notebook.
@@ -76,7 +77,7 @@ This will create a dedicated folder for training a specific experiment with a de
 > - Edit notebook manually
 > - allow internet requires your permission (internet is required to clone the git)
 >   - :phone: a verified kaggle account is required
-> - :key: Allow Kaggle secrets to access wandb:
+> - :key: Allow [Kaggle secrets](https://www.kaggle.com/discussions/product-feedback/114053) to access wandb:
 >   - `wandb_api_key`: weights and biases API key.
 > - You'll need to manually edit the notebook under kaggle web page to allow secrets.
 > - Quick save your notebook.
